@@ -1,5 +1,6 @@
 // Variáveis para as raquetes, bola e barras horizontais
 let raqueteJogador, raqueteComputador, bola, barraSuperior, barraInferior;
+
 let fundoImg, bolaImg, barra1Img, barra2Img; // Adicione esta linha
 
 function preload() {
@@ -27,7 +28,6 @@ function draw() {
   let imgY = (height - imgHeight) / 2;
   image(fundoImg, imgX, imgY, imgWidth, imgHeight);
 
-  
   // Atualiza as posições das raquetes, bola e barras horizontais
   raqueteJogador.atualizar();
   raqueteComputador.atualizar();
@@ -79,6 +79,7 @@ class Raquete {
     scale(this.h / 400.0); // Escala as imagens para metade do tamanho
     image(img, 0, 0, img.width, img.height);
     pop();
+
   }
 }
 
