@@ -1,5 +1,14 @@
 // Variáveis para as raquetes, bola e barras horizontais
 let raqueteJogador, raqueteComputador, bola, barraSuperior, barraInferior;
+let fundoImg, bolaImg, barra1Img, barra2Img; // Adicione esta linha
+
+function preload() {
+  fundoImg = loadImage('fundo.png');
+  bolaImg = loadImage('bola.png'); // Substitua pelo URL correto da imagem
+  barra1Img = loadImage('barra1.png'); // Substitua pelo URL correto da imagem
+  barra2Img = loadImage('barra2.png'); // Substitua pelo URL correto da imagem
+}
+
 
 function setup() {
   createCanvas(800, 400);
@@ -11,8 +20,14 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  let escala = Math.max(width / fundoImg.width, height / fundoImg.height);
+  let imgWidth = fundoImg.width * escala;
+  let imgHeight = fundoImg.height * escala;
+  let imgX = (width - imgWidth) / 2;
+  let imgY = (height - imgHeight) / 2;
+  image(fundoImg, imgX, imgY, imgWidth, imgHeight);
 
+  
   // Atualiza as posições das raquetes, bola e barras horizontais
   raqueteJogador.atualizar();
   raqueteComputador.atualizar();
@@ -52,10 +67,18 @@ class Raquete {
   }
 
   exibir() {
-    fill(255);
-    noStroke();
-    rectMode(CENTER);
-    rect(this.x, this.y, this.w, this.h);
+    let img;
+    if (this === raqueteJogador) {
+      img = barra1Img;
+    } else {
+      img = barra2Img;
+    }
+    push();
+    imageMode(CENTER);
+    translate(this.x, this.y);
+    scale(this.h / 400.0); // Escala as imagens para metade do tamanho
+    image(img, 0, 0, img.width, img.height);
+    pop();
   }
 }
 
@@ -72,6 +95,7 @@ class Bola {
   }
 
   reiniciar() {
+    this.anguloRotacao = 0;
     this.x = width / 2;
     this.y = height / 2;
     this.velocidadeX = random([-4, -3, 3, 4]);
@@ -95,6 +119,8 @@ class Bola {
       raqueteComputador.y = random(height - raqueteComputador.h);
       this.reiniciar();
     }
+    this.anguloRotacao += Math.atan2(this.velocidadeY, this.velocidadeX) / 5;
+
   }
 verificarColisaoRaquete(raquete) {
   if (
@@ -121,9 +147,13 @@ verificarColisaoRaquete(raquete) {
 }
 
   exibir() {
-    fill(255);
-    ellipseMode(CENTER);
-    ellipse(this.x, this.y, this.r);
+    push();
+    imageMode(CENTER);
+    translate(this.x, this.y);
+    scale(2 * this.r / 318); // Escala a imagem para metade do tamanho
+    rotate(this.anguloRotacao);
+    image(bolaImg, 0, 0, bolaImg.width, bolaImg.height);
+    pop();
   }
 }
 
@@ -136,7 +166,7 @@ class Barra {
   }
 
   exibir() {
-    fill(color(255, 0,0));
+    fill(color("#2B3FD6"));
     rectMode(CENTER);
     rect(this.x + this.w / 2, this.y, this.w, this.h);
   }
